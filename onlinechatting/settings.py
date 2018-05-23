@@ -11,9 +11,14 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.conf import settings
+from django.contrib import messages
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
+    'apps.Message',
 ]
 
 MIDDLEWARE = [
@@ -74,10 +81,14 @@ WSGI_APPLICATION = 'onlinechatting.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.mysql',
+       'NAME': config('DB_NAME'),
+       'USER': config('DB_USER'),
+       'PASSWORD': config('DB_PASSWORD'),
+       'HOST': config('DB_HOST'),
+       'PORT': '',
+   }
 }
 
 
@@ -118,3 +129,41 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+redis_host = os.environ.get('REDIS_HOST', config(r'REDIS_IP'))
+CHANNEL_LAYERS = {
+    "default": {
+        # This example app uses the Redis channel layer implementation asgi_redis
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(redis_host, 6379)],
+            # "hosts": [("redis://h:p38f20a6be04f09094345e3c1500bbefe658b6c3e37e0f6760e229c9e58d922b3@ec2-35-174-64-60.compute-1.amazonaws.com:16359")],
+        },
+       "ROUTING": "onlinechatting.routing.channel_routing", # We will create it in a moment
+    },
+}
+
+NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS = getattr(settings, 'NOTIFY_USERS_ON_ENTER_OR_LEAVE_ROOMS', True)
+
+MSG_TYPE_MESSAGE = 0  # For standard messages
+MSG_TYPE_WARNING = 1  # For yellow messages
+MSG_TYPE_ALERT = 2  # For red & dangerous alerts
+MSG_TYPE_MUTED = 3  # For just OK information that doesn't bother users
+MSG_TYPE_ENTER = 4  # For just OK information that doesn't bother users
+MSG_TYPE_LEAVE = 5  # For just OK information that doesn't bother users
+
+MESSAGE_TYPES_CHOICES = getattr(settings, 'MESSAGE_TYPES_CHOICES', (
+    (MSG_TYPE_MESSAGE, 'MESSAGE'),
+    (MSG_TYPE_WARNING, 'WARNING'),
+    (MSG_TYPE_ALERT, 'ALERT'),
+    (MSG_TYPE_MUTED, 'MUTED'),
+    (MSG_TYPE_ENTER, 'ENTER'),
+    (MSG_TYPE_LEAVE, 'LEAVE')))
+
+MESSAGE_TYPES_LIST = getattr(settings, 'MESSAGE_TYPES_LIST',
+                             [MSG_TYPE_MESSAGE,
+                              MSG_TYPE_WARNING,
+                              MSG_TYPE_ALERT,
+                              MSG_TYPE_MUTED,
+                              MSG_TYPE_ENTER,
+                              MSG_TYPE_LEAVE])
