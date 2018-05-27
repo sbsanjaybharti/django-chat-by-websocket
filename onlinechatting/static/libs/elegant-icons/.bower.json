@@ -1,0 +1,37 @@
+{
+  "name": "elegant-icons",
+  "authors": [
+    "Elegant Themes"
+  ],
+  "description": "Elegant Themes' Elegant Icon font as a bower package",
+  "main": [
+    "./css/style.css",
+    "./fonts/*"
+  ],
+  "keywords": [
+    "elegant",
+    "icon"
+  ],
+  "license": [
+    "MIT",
+    "GPL2.0"
+  ],
+  "homepage": "http://www.elegantthemes.com/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "5ee6132ad7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "5ee6132ad7cf85b0e7d1ff19c9fca244034880d5"
+  },
+  "_source": "git://github.com/josephnle/elegant-icons.git",
+  "_target": "*",
+  "_originalSource": "elegant-icons",
+  "_direct": true
+}

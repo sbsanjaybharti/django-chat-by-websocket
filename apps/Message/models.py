@@ -11,7 +11,7 @@ from onlinechatting.settings import MSG_TYPE_MESSAGE
 class MessageGroup(models.Model):
 
     user = models.ForeignKey(User, related_name='message_group_user', null=True, on_delete=models.CASCADE)
-    advisor = models.ForeignKey(User, related_name='message_group_advisor', null=True, on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name='message_group_advisor', null=True, on_delete=models.CASCADE)
     status = models.BooleanField(default=True)
     created_by = models.ForeignKey(User, related_name='message_group_created_by', null=True, on_delete=models.CASCADE)
     updated_by = models.ForeignKey(User, related_name='message_group_updated_by', null=True, on_delete=models.CASCADE)
@@ -98,3 +98,22 @@ class Reciever(models.Model):
 
     class Meta:
         db_table = "message_reciever"
+
+class File(models.Model):
+
+    user = models.ForeignKey(User, related_name='file_user', null=True, on_delete=models.CASCADE)
+    type = models.CharField(max_length=100, null=True, default='profile')
+    name = models.FileField(null=True, blank=True)
+    extention = models.CharField(max_length=100, null=True, blank=True)
+    path = models.CharField(max_length=200, null=True, blank=True)
+    status = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, related_name='file_created_by', null=True, on_delete=models.CASCADE)
+    updated_by = models.ForeignKey(User, related_name='file_updated_by', null=True, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=timezone.now, blank=True)
+    updated_at = models.DateTimeField(default=timezone.now, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = "file"

@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static from staticfiles %}
+{% block Title %}Connect for message{% endblock %}
+
+
+{% block content %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/reconnecting-websocket/1.0.0/reconnecting-websocket.min.js"></script>
+    <script src="{% static 'js/message.js' %}"></script>
+    {% csrf_token %}
+    <!-- Menu Bar End-->
+    <div class="container">
+        <div class="advisor_my_massages">
+            <div class="row">
+                <!--<Sidebar>-->
+                <div class="col-md-4">
+                    <nav class="sidebar">
+                        <div class="side_menu">
+                            <ul class="nav nav-tabs" role="tablist">
+                                {% for message_group in message_groups %}
+                                    <li>
+                                        <a class="nav-link active" href="{% url 'Chat' %}?id={{message_group.user_to.id}}" role="tab" data-toggle="">
+                                            <div class="side_menu_item active">
+                                                <div class="profile_menu">
+                                                    {% if message_group.advisor.detail_user.profile_image.name.url != None %}
+                                                        <span class="pro_img align-middle">
+                                                            <img class="profile_pic" src="{{ MEDIA_ROOT }}{{ message_group.advisor.detail_user.profile_image.name.url }}" alt="profile_pic">
+                                                        </span>
+                                                    {% else %}
+                                                        <span class="pro_img align-middle">
+                                                            <img class="profile_pic" src="https://www.gravatar.com/avatar/{{ message_group.advisor.email|urlencode }}?d=identicon" alt="profile_pic">
+                                                        </span>
+                                                    {% endif %}
+                                                    <div class="user_info align-middle">
+                                                        <div class="user_name online">
+                                                            <i class="fa fa-circle" aria-hidden="true"></i>{{message_group.advisor.first_name}} {{message_group.advisor.last_name}}</div>
+                                                    </div>
+                                                    <span class="recently_active align-top"></span>
+                                                </div>
+                                                <div class="profile_content">
+                                                    <p>{{message_group.LastMessage.content|safe|truncatewords:20}}
+                                                        {% if message_group.UnreadMessageCount > 0 %}
+                                                            <span class="notification_icon align-middle">
+                                                                <span class="noti_num">{{ message_group.UnreadMessageCount }}</span>
+                                                            </span>
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                {% empty %}
+                                    <li><p class="empty">You have no chat message!</p></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+
+                <!--<Main Content>-->
+                <div class="col-md-8">
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active"  id="chat_room" data-room-id="{{ message_chat_box.id }}">
+                            <div class="main_content">
+                                <div class="user_msg_container">
+                                    <div class="msg_header_container">
+                                        <div id="current_chatting_user_name" class="qwe">{{ message_chat_box.advisor.first_name }} {{ message_chat_box.advisor.last_name }}</div>
+                                    </div>
+                                    <div class="msg_body_container">
+                                        <div class="chats_item" id="chats_item">
+                                            {% for sender in sender_chat %}
+                                                <div class="profile_menu profile_message clearfix">
+                                                    <div class="row align-middle">
+                                                        <div class="col-md-1">
+                                                            <span class="pro_img clearfix align-middle">
+                                                                {% if sender.user.detail_user.profile_image.name.url != None %}
+                                                                        <img class="profile_pic" src="{{ MEDIA_ROOT }}{{ sender.user.detail_user.profile_image.name.url }}" alt="profile_pic">
+                                                                {% else %}
+                                                                        <img class="profile_pic" src="https://www.gravatar.com/avatar/{{ sender.user.email|urlencode }}?d=identicon" alt="profile_pic">
+                                                                {% endif %}
+                                                            </span>
+                                                        </div>
+                                                        <div class="col-md-11">
+                                                            <div class="user_info clearfix align-middle">
+                                                                <div class="user_name_time">
+                                                                    <span class="user_name">{{ sender.user.first_name }} {{ sender.user.last_name }}</span>
+                                                                    <span class="pro_time">{{ sender.time|date:"g:i a" }}</span>
+                                                                </div>
+                                                                <div class="user_role user_msg">
+                                                                    <p>{{ sender.message.content |safe }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div id="chats">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
