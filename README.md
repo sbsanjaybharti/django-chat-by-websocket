@@ -5,7 +5,6 @@ This application contain real time chatting with websocket and radis server
 
 * [Requirement](#requirement)
 * [Installation](#installation)
-* [Quick Start](#quick-start)
 
 <a name="requirement"></a>
 ### Requirement:
@@ -23,6 +22,6 @@ This application contain real time chatting with websocket and radis server
 ``` python manage.py createsuperuser```
 4. Start you redis server
 5. Add your redis server IP and PORT to setting.py file
-6. Run the application ```python manage.py runserver```
+6. pip install -r requirements.txt
+7. Run the application ```python manage.py runserver```
 <a name="quick-start"></a>
-### Quick Start:
