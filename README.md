@@ -15,7 +15,7 @@ This application contain real time chatting with websocket and radis server
 
 <a name="installation"></a>
 ### Installation:
-####Following Step need to follow:
+Following Step need to follow:
 1. Setup the redis server, Download and install (3.2.100 or any latest version)
 2. Git clone this code at your system
 3. Create multiple users
@@ -25,3 +25,5 @@ This application contain real time chatting with websocket and radis server
 6. pip install -r requirements.txt
 7. Run the application ```python manage.py runserver```
 <a name="quick-start"></a>
+
+Note: Working fine with Mozila, some JS issue with Chrome
